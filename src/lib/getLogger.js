@@ -78,9 +78,16 @@ class Logger {
   }
 }
 
-const defaultInstance = new Logger(getCliOptions());
+const defaultInstance = () => {
+  if (typeof(window) === "object") {
+    //console.log(">>> In the browser, returning empty");
+    return {};
+  }
+  return new Logger(getCliOptions());
+};
 
 function createAppLogger(appConfig) {
+  //console.log(">>> Creating app logger with config:", appConfig);
   let appLogger = null;
 
   if (appConfig) {
@@ -98,6 +105,11 @@ function createAppLogger(appConfig) {
 let appLogger;
 
 export default function getLogger(appConfig) {
+  if (typeof(window) === "object") {
+    //console.log(">>> In the browser");
+    return {};
+  }
+
   if (typeof(appLogger) === "undefined") {
     appLogger = createAppLogger(appConfig);
   }
